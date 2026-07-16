@@ -6,10 +6,12 @@ import {
   signToken,
 } from "../services/auth.service";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "strict" as const,
+  secure: isProduction,
+  sameSite: (isProduction ? "none" : "strict") as "none" | "strict",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
@@ -90,8 +92,8 @@ export const login = async (
 export const logout = (_req: Request, res: Response): void => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "strict",
   });
   res.json({ message: "Logged out" });
 };
