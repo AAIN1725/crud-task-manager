@@ -26,6 +26,11 @@ app.use("/api/tasks", taskRoutes);
 
 app.use(errorMiddleware);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// app.listen() is skipped in production (Vercel serverless); the app is exported instead
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;

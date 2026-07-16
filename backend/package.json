@@ -10,7 +10,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
