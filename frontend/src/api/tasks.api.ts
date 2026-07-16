@@ -1,7 +1,10 @@
 import axios from 'axios';
 import type { Task, StatusFilter, TaskStatus } from '../types';
 
-const api = axios.create({ withCredentials: true });
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL ?? '',
+  withCredentials: true,
+});
 
 export const getTasks = async (status: StatusFilter = 'all'): Promise<Task[]> => {
   const params = status !== 'all' ? { status } : {};

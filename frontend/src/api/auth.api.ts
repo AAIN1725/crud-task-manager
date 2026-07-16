@@ -1,7 +1,10 @@
 import axios from 'axios';
 import type { User } from '../types';
 
-const api = axios.create({ withCredentials: true });
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL ?? '',
+  withCredentials: true,
+});
 
 export const register = async (email: string, password: string): Promise<User> => {
   const { data } = await api.post<{ user: User }>('/api/auth/register', { email, password });
