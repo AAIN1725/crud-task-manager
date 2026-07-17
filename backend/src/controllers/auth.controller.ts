@@ -6,14 +6,6 @@ import {
   signToken,
 } from "../services/auth.service";
 
-const isProduction = process.env.NODE_ENV === "production";
-
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: isProduction,
-  sameSite: (isProduction ? "none" : "strict") as "none" | "strict",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-};
 
 export const register = async (
   req: Request,
@@ -44,8 +36,7 @@ export const register = async (
     });
 
     const token = signToken(user.id);
-    res.cookie("token", token, COOKIE_OPTIONS);
-    res.status(201).json({ user });
+    res.status(201).json({ user, token });
   } catch (err) {
     next(err);
   }
@@ -80,9 +71,9 @@ export const login = async (
     }
 
     const token = signToken(user.id);
-    res.cookie("token", token, COOKIE_OPTIONS);
     res.json({
       user: { id: user.id, email: user.email, createdAt: user.createdAt },
+      token,
     });
   } catch (err) {
     next(err);
@@ -90,11 +81,6 @@ export const login = async (
 };
 
 export const logout = (_req: Request, res: Response): void => {
-  res.clearCookie("token", {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: isProduction ? "none" : "strict",
-  });
   res.json({ message: "Logged out" });
 };
 

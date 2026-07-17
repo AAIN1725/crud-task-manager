@@ -10,7 +10,10 @@ export const authenticate = (
   res: Response,
   next: NextFunction
 ): void => {
-  const token: string | undefined = req.cookies?.token;
+  const authHeader = req.headers.authorization;
+  const token: string | undefined = authHeader?.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : undefined;
   if (!token) {
     res.status(401).json({ message: "Not authenticated" });
     return;
